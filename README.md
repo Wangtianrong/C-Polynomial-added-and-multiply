@@ -22,8 +22,7 @@ void attach(int coef,int expon,Polymial* ptrear){
 Polymial ReadPoly(){
 	int n;
 	Polymial rear,front,temp;
-	rear=(Polymial)malloc(sizeof(struct PolyNode));
-	front=rear;
+	front=rear=(Polymial)malloc(sizeof(struct PolyNode));
 	front->link=NULL;
 	int coef,expon;
 	scanf("%d",&n);
@@ -37,7 +36,7 @@ Polymial ReadPoly(){
 	return front;
 }
 //多项式相乘
-Polymial Mulit(Polymial p1,Polymial p2){
+Polymial Mult(Polymial p1,Polymial p2){
 	Polymial t1=p1,t2=p2;
 	Polymial rear,temp,p;
 	p=rear=(Polymial)malloc(sizeof(struct PolyNode));
@@ -78,7 +77,7 @@ Polymial Mulit(Polymial p1,Polymial p2){
 			}
 			t2=t2->link;
 		}
-		
+		t1=t1->link;	
 	}
 	temp=p;
 	p=p->link;
@@ -100,23 +99,27 @@ Polymial Add(Polymial p1,Polymial p2){
 			attach(t2->coef ,t2->expon,&rear);
 			t2=t2->link;
 		}
-		else{
+		else if(t2->coef+t1->coef!=0){
 			attach(t2->coef+t1->coef ,t2->expon,&rear);
 			t1=t1->link;
 			t2=t2->link;
 		}
-		while(t1){
+		else{
+			t1=t1->link;
+			t2=t2->link;
+		}
+	}
+	while(t1){
 			attach(t1->coef ,t1->expon,&rear);
 			t1=t1->link;
 		}
-		while(t2){
+	while(t2){
 			attach(t2->coef ,t2->expon,&rear);
 			t2=t2->link;
 		}
-		temp=front;
-		front=front->link;
-		free(temp);
-	}
+	temp=front;
+	front=front->link;
+	free(temp);
 	return front;
 }
 //输出多项式 
@@ -126,15 +129,13 @@ void PrintPoly(Polymial p){
 		printf("0 0");return;
 	}
 	while(p){
-		if(p->coef!=0){
 			if(!flag)
 			flag=1;
 		else
 			printf(" ");
-		printf("%d %d",p->coef,p->expon);	
-		}	
+		printf("%d %d",p->coef,p->expon);		
 		p=p->link;	
-		}
+	}
 		//printf("\n");
 		return;
 	}
@@ -147,7 +148,7 @@ int  main() {
 	//读入多项式2
 	P2=ReadPoly();
 	//乘法运算并输出
-	PP=Mulit(P1,P2);
+	PP=Mult(P1,P2);
 	PrintPoly(PP);printf("\n");
 	//加法运算并输出 
 	PS=Add(P1,P2);
